@@ -23,6 +23,7 @@ import com.saswat10.network.KtorClient
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
 import com.saswat10.network.writeSomething
+import com.saswat10.posthive.screens.LoginScreen
 import com.saswat10.posthive.screens.RegisterScreen
 import com.saswat10.posthive.ui.theme.PostHiveTheme
 
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
             PostHiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        RegisterScreen(ktorClient)
+                        LoginScreen(ktorClient)
                     }
                 }
             }
