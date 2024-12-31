@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -28,10 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saswat10.posthive.ui.theme.AlucardYellow
+import com.saswat10.posthive.ui.theme.DraculaPink
 
 @Composable
 fun PostCardComponent(
@@ -51,7 +55,7 @@ fun PostCardComponent(
                 contentDescription = null,
                 Modifier
                     .padding(start = 4.dp)
-                    .size(30.dp),
+                    .size(40.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -65,6 +69,7 @@ fun PostCardComponent(
                     "2 days ago",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.tertiary,
+                    fontStyle = FontStyle.Italic
                 )
             }
             Icon(
@@ -73,8 +78,18 @@ fun PostCardComponent(
                 Modifier
                     .padding(end = 4.dp)
                     .size(30.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = DraculaPink
             )
+            if (onEdit) {
+                Icon(
+                    imageVector = Icons.Rounded.Edit,
+                    contentDescription = null,
+                    Modifier
+                        .padding(end = 4.dp)
+                        .size(30.dp),
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+            }
         }
         HorizontalDivider()
         Column(
@@ -82,7 +97,7 @@ fun PostCardComponent(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text("Title", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Text("Title", fontWeight = FontWeight.Bold, fontSize = 24.sp)
             Text(
                 "This is the content of the post, This is the content of the post, This is the content of the post",
                 fontSize = 18.sp
@@ -94,8 +109,8 @@ fun PostCardComponent(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("24 Likes")
-            Text("11 Comments")
+            Text("24 Likes", color = AlucardYellow, fontWeight = FontWeight.Bold)
+            Text("11 Comments", color = AlucardYellow, fontWeight = FontWeight.Bold)
         }
         HorizontalDivider(Modifier.height(2.dp))
     }
@@ -124,7 +139,12 @@ fun PreviewPost() {
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 null,
                 tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.background(MaterialTheme.colorScheme.primary, RoundedCornerShape(25)).padding(12.dp)
+                modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(25)
+                    )
+                    .padding(12.dp)
             )
         }
 

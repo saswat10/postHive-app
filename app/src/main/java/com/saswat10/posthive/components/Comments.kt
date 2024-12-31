@@ -31,7 +31,7 @@ fun Comments() {
             imageVector = Icons.Rounded.AccountCircle,
             contentDescription = null,
             Modifier.padding(start = 4.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.secondary
         )
         Column(
             Modifier
@@ -40,12 +40,12 @@ fun Comments() {
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(end=8.dp)
             ) {
                 Text(
                     "@username",
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.secondary
                 )
                 Text("2 days ago", fontSize = 12.sp, color = MaterialTheme.colorScheme.tertiary)
             }

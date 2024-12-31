@@ -12,29 +12,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = darkPrimary,
-    secondary = darkSecondary,
-    tertiary = darkAccent,
-    background = darkBackground,
-    surface = darkSurface
+    primary = DraculaPurple,
+    secondary = DraculaGreen,
+    tertiary = DraculaComment,
+    background = DraculaBackground,
+    surface = DraculaCurrentLine,
+    onPrimary = DraculaForeground,
+    onSecondary = DraculaBackground,
+    onTertiary = DraculaBackground,
+    onBackground = DraculaForeground,
+    onSurface = DraculaForeground,
+    error = DraculaRed,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = lightPrimary,
-    secondary = lightSecondary,
-    tertiary = lightAccent,
-    background = lightBackground,
-    surface = lightSurface
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = AlucardPurple,
+    secondary = AlucardPink,
+    tertiary = AlucardGreen,
+    background = AlucardBackground,
+    surface = AlucardCurrentLine,
+    onPrimary = AlucardBackground,
+    onSecondary = AlucardBackground,
+    onTertiary = AlucardBackground,
+    onBackground = AlucardForeground,
+    onSurface = AlucardForeground,
+    error = AlucardRed,
 )
 
 @Composable

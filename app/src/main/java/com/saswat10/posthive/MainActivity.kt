@@ -1,6 +1,7 @@
 package com.saswat10.posthive
 
 import android.os.Bundle
+import android.provider.ContactsContract.Profile
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,8 +24,13 @@ import com.saswat10.network.KtorClient
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
 import com.saswat10.network.writeSomething
+import com.saswat10.posthive.screens.CreateUpdatePost
+import com.saswat10.posthive.screens.DiscoverScreen
 import com.saswat10.posthive.screens.LoginScreen
+import com.saswat10.posthive.screens.ProfileScreen
 import com.saswat10.posthive.screens.RegisterScreen
+import com.saswat10.posthive.screens.SearchScreen
+import com.saswat10.posthive.screens.SinglePost
 import com.saswat10.posthive.ui.theme.PostHiveTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +42,7 @@ class MainActivity : ComponentActivity() {
             PostHiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        LoginScreen(ktorClient)
+                        ProfileScreen()
                     }
                 }
             }
