@@ -32,9 +32,13 @@ import com.saswat10.posthive.screens.RegisterScreen
 import com.saswat10.posthive.screens.SearchScreen
 import com.saswat10.posthive.screens.SinglePost
 import com.saswat10.posthive.ui.theme.PostHiveTheme
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
-    private val ktorClient = KtorClient()
+
+    @Inject
+    lateinit var ktorClient: KtorClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
