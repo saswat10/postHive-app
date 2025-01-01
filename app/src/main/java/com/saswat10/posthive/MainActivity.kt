@@ -32,8 +32,10 @@ import com.saswat10.posthive.screens.RegisterScreen
 import com.saswat10.posthive.screens.SearchScreen
 import com.saswat10.posthive.screens.SinglePost
 import com.saswat10.posthive.ui.theme.PostHiveTheme
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
             PostHiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        ProfileScreen()
+                        DiscoverScreen()
                     }
                 }
             }

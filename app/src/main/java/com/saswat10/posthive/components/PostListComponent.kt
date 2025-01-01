@@ -24,9 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saswat10.network.models.domain.Post
 
 @Composable
-fun PostListComponent() {
+fun PostListComponent(post: Post) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         HorizontalDivider(Modifier.height(2.dp))
         Row(
@@ -43,13 +44,13 @@ fun PostListComponent() {
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                "@username",
+                "@${post.owner}",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
             Text(
-                "2 days ago",
+                post.createdAt,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.padding(end = 4.dp),
@@ -61,9 +62,9 @@ fun PostListComponent() {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text("Title", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Text(post.title, fontWeight = FontWeight.Bold, fontSize = 22.sp)
             Text(
-                "This is the content of the post, This is the content of the post, This is the content of the post",
+                post.content,
                 fontSize = 18.sp
             )
         }
@@ -74,12 +75,12 @@ fun PostListComponent() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Rounded.Favorite, null, Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("24")
+                Text("${post.votes}")
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Filled.Menu, null, Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("11")
+                Text("${post.comments}")
             }
         }
         HorizontalDivider(Modifier.height(2.dp))
@@ -90,12 +91,12 @@ fun PostListComponent() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewComponent() {
-    Column {
-        PostListComponent()
-        PostListComponent()
-        PostListComponent()
-        PostListComponent()
-        PostListComponent()
-        PostListComponent()
-    }
+//    Column {
+//        PostListComponent()
+//        PostListComponent()
+//        PostListComponent()
+//        PostListComponent()
+//        PostListComponent()
+//        PostListComponent()
+//    }
 }

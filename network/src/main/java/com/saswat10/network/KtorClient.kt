@@ -1,7 +1,10 @@
 package com.saswat10.network
 
+import com.saswat10.network.models.domain.Post
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
+import com.saswat10.network.models.remote.RemotePost
+import com.saswat10.network.models.remote.toPost
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -10,11 +13,16 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.InternalAPI
 import kotlinx.serialization.json.Json
 
 class KtorClient {
@@ -27,8 +35,8 @@ class KtorClient {
 
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys= true
-                prettyPrint= true
+                ignoreUnknownKeys = true
+                prettyPrint = true
                 isLenient = true
             })
         }
@@ -41,21 +49,26 @@ class KtorClient {
     }
 
 
-    suspend fun register(data: Registration): ApiOperation<RegistrationResponse> {
+
+//    suspend fun register(data: Registration): ApiOperation<RegistrationResponse> {
+//        return safeApiCall {
+//            client.post("users/") {
+//                contentType(ContentType.Application.Json)
+//                setBody(data)
+//            }.body()
+//        }
+//    }
+
+    suspend fun getPosts(): ApiOperation<List<Post>> {
         return safeApiCall {
-            client.post("users/"){
-                contentType(ContentType.Application.Json)
-                setBody(data)
-            }.body()
+            client.get("posts/")
+                .body<List<RemotePost>>()
+                .map {
+                    it.toPost()
+                }
         }
     }
 
-    suspend fun register2(data: Registration): RegistrationResponse {
-           return client.post("users/"){
-               contentType(ContentType.Application.Json)
-               setBody(data)
-           }.body()
-    }
 
     private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
         return try {

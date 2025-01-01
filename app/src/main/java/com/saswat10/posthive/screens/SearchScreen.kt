@@ -88,7 +88,7 @@ fun SearchScreen() {
             LazyColumn {
                 repeat(10) {
                     item {
-                        PostListComponent()
+//                        PostListComponent()
                     }
                 }
             }

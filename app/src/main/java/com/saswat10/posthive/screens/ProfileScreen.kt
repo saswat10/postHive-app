@@ -74,7 +74,7 @@ fun ProfileScreen() {
         LazyColumn {
             repeat(5){
                 item{
-                    PostListComponent()
+//                    PostListComponent()
                 }
             }
         }
