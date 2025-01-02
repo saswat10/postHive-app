@@ -16,29 +16,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saswat10.posthive.components.Toolbar
+import com.saswat10.posthive.viewmodels.CreatePostViewModel
 
 @Composable
 fun CreateUpdatePost(
-    id: Int? = null,
-    title: String = "",
-    content: String = "",
-    pageTitle: String = ""
+    viewModel: CreatePostViewModel = viewModel()
 ) {
 
+    val title by viewModel.title.collectAsStateWithLifecycle()
+    val content by viewModel.content.collectAsStateWithLifecycle()
     Column {
         Toolbar("Create Post")
         LazyColumn {
             item {
                 Column(Modifier.padding(12.dp)) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = { },
+                        value = title,
+                        onValueChange = { viewModel.onTitleChange(it) },
                         placeholder = { Text("Title") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -46,8 +50,8 @@ fun CreateUpdatePost(
                     )
                     Spacer(Modifier.height(20.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = { },
+                        value = content,
+                        onValueChange = { viewModel.onContentChange(it) },
                         placeholder = { Text("Content") },
                         modifier = Modifier
                             .fillMaxWidth()

@@ -148,7 +148,7 @@ fun PreviewPost() {
             )
         }
 
-        Comments()
-        Comments()
+//        Comments()
+//        Comments()
     }
 }

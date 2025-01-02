@@ -1,6 +1,8 @@
 package com.saswat10.network.models.remote
 
 
+import com.saswat10.network.convertToRelativeDate
+import com.saswat10.network.models.domain.Comment
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -23,5 +25,14 @@ data class RemoteComment(
         val email: String,
         val id: Int,
         val name: String
+    )
+}
+
+fun RemoteComment.toComment(): Comment{
+    return Comment(
+        id= id,
+        content = content,
+        username = user.name,
+        createdAt = convertToRelativeDate(createdAt)
     )
 }

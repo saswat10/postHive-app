@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             PostHiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        DiscoverScreen()
+                        CreateUpdatePost()
                     }
                 }
             }

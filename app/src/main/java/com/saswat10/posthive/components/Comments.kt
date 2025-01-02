@@ -17,9 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saswat10.network.models.domain.Comment
 
 @Composable
-fun Comments() {
+fun Comments(comment: Comment) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -43,13 +44,13 @@ fun Comments() {
                 modifier = Modifier.fillMaxWidth().padding(end=8.dp)
             ) {
                 Text(
-                    "@username",
+                    "@${comment.username}",
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.secondary
                 )
-                Text("2 days ago", fontSize = 12.sp, color = MaterialTheme.colorScheme.tertiary)
+                Text(comment.createdAt, fontSize = 12.sp, color = MaterialTheme.colorScheme.tertiary)
             }
-            Text("The person must have commented something, And the user must be seeing this")
+            Text(comment.content)
         }
     }
 }
@@ -58,8 +59,8 @@ fun Comments() {
 @Composable
 fun PreviewComments() {
     Column {
-        Comments()
-        Comments()
-        Comments()
+//        Comments()
+//        Comments()
+//        Comments()
     }
 }

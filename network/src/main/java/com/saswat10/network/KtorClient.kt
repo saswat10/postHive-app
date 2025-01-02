@@ -1,13 +1,17 @@
 package com.saswat10.network
 
+import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
+import com.saswat10.network.models.remote.RemoteComment
 import com.saswat10.network.models.remote.RemotePost
+import com.saswat10.network.models.remote.toComment
 import com.saswat10.network.models.remote.toPost
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.Logger
@@ -28,7 +32,11 @@ import kotlinx.serialization.json.Json
 class KtorClient {
     private val client = HttpClient(OkHttp) {
         defaultRequest { url("https://posthive-api.onrender.com/") }
-
+        install(HttpTimeout){
+            requestTimeoutMillis = 30000 // Total timeout for the request (30 seconds)
+            connectTimeoutMillis = 10000 // Timeout for establishing a connection (10 seconds)
+            socketTimeoutMillis = 20000  // Timeout for data transfer after connection is established (20 seconds)
+        }
         install(Logging) {
             logger = Logger.SIMPLE
         }
@@ -49,22 +57,30 @@ class KtorClient {
     }
 
 
-
-//    suspend fun register(data: Registration): ApiOperation<RegistrationResponse> {
-//        return safeApiCall {
-//            client.post("users/") {
-//                contentType(ContentType.Application.Json)
-//                setBody(data)
-//            }.body()
-//        }
-//    }
-
     suspend fun getPosts(): ApiOperation<List<Post>> {
         return safeApiCall {
             client.get("posts/")
                 .body<List<RemotePost>>()
                 .map {
                     it.toPost()
+                }
+        }
+    }
+
+    suspend fun getPost(id: Int): ApiOperation<Post>{
+        return safeApiCall {
+            client.get("posts/$id")
+                .body<RemotePost>()
+                .toPost()
+        }
+    }
+
+    suspend fun getComments(postId: Int): ApiOperation<List<Comment>>{
+        return safeApiCall {
+            client.get("posts/$postId/comments/")
+                .body<List<RemoteComment>>()
+                .map{
+                    it.toComment()
                 }
         }
     }

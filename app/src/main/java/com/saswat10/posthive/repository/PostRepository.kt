@@ -2,6 +2,7 @@ package com.saswat10.posthive.repository
 
 import com.saswat10.network.ApiOperation
 import com.saswat10.network.KtorClient
+import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
 import com.saswat10.posthive.di.DataStorage
 import javax.inject.Inject
@@ -11,4 +12,8 @@ class PostRepository @Inject constructor(
     private val dataStorage: DataStorage
 ) {
     suspend fun fetchPosts():ApiOperation<List<Post>> = ktorClient.getPosts()
+
+    suspend fun fetchPostById(id: Int): ApiOperation<Post> = ktorClient.getPost(id)
+
+    suspend fun fetchComments(postId: Int): ApiOperation<List<Comment>> = ktorClient.getComments(postId)
 }
