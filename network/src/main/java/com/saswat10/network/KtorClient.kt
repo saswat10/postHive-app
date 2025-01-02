@@ -2,9 +2,11 @@ package com.saswat10.network
 
 import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
+import com.saswat10.network.models.remote.CreatePostReponse
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
 import com.saswat10.network.models.remote.RemoteComment
+import com.saswat10.network.models.remote.RemoteCreatePost
 import com.saswat10.network.models.remote.RemotePost
 import com.saswat10.network.models.remote.toComment
 import com.saswat10.network.models.remote.toPost
@@ -22,7 +24,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -82,6 +86,16 @@ class KtorClient {
                 .map{
                     it.toComment()
                 }
+        }
+    }
+
+    suspend fun createPost(body: RemoteCreatePost, token: String): ApiOperation<CreatePostReponse>{
+        return safeApiCall {
+            client.post("posts/"){
+                contentType(ContentType.Application.Json)
+                setBody(body)
+                header(HttpHeaders.Authorization,"Bearer $token")
+            }.body<CreatePostReponse>()
         }
     }
 

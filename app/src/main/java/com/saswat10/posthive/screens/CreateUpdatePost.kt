@@ -35,6 +35,9 @@ fun CreateUpdatePost(
 
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
+    val isSubmitting by viewModel.isSubmitting.collectAsState()
+    val error by viewModel.error.collectAsStateWithLifecycle()
+
     Column {
         Toolbar("Create Post")
         LazyColumn {
@@ -61,9 +64,10 @@ fun CreateUpdatePost(
                         )
                     Spacer(Modifier.height(20.dp))
                     Text(
-                        "Create",
+                        text = (if (isSubmitting) "Submitting..." else "Submit"),
                         modifier = Modifier
                             .clickable {
+                                viewModel.createPost()
                             }
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10))
@@ -73,6 +77,8 @@ fun CreateUpdatePost(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onTertiary
                     )
+
+                    Text(text = (error.ifBlank { "" }))
                 }
             }
         }
