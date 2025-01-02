@@ -1,5 +1,6 @@
 package com.saswat10.posthive.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +34,7 @@ fun Toolbar(
     title: String,
     onBackAction: (() -> Unit)? = null
 ) {
-    Column {
+    Column() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (onBackAction != null) {
                 Box(

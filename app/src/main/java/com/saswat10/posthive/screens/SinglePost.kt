@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saswat10.posthive.components.Comments
@@ -35,7 +36,7 @@ import com.saswat10.posthive.viewmodels.SinglePostViewState
 
 @Composable
 fun SinglePost(
-    viewModel: SinglePostViewModel = viewModel()
+    viewModel: SinglePostViewModel = hiltViewModel()
 ) {
     val postState by viewModel.postState.collectAsStateWithLifecycle()
     val commentsState by viewModel.commentState.collectAsStateWithLifecycle()

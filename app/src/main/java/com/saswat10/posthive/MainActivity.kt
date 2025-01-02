@@ -1,36 +1,42 @@
 package com.saswat10.posthive
 
 import android.os.Bundle
-import android.provider.ContactsContract.Profile
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.graphics.ColorUtils
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.saswat10.network.KtorClient
-import com.saswat10.network.models.remote.Registration
-import com.saswat10.network.models.remote.RegistrationResponse
-import com.saswat10.network.writeSomething
 import com.saswat10.posthive.screens.CreateUpdatePost
 import com.saswat10.posthive.screens.DiscoverScreen
-import com.saswat10.posthive.screens.LoginScreen
 import com.saswat10.posthive.screens.ProfileScreen
-import com.saswat10.posthive.screens.RegisterScreen
-import com.saswat10.posthive.screens.SearchScreen
-import com.saswat10.posthive.screens.SinglePost
+import com.saswat10.posthive.ui.theme.DraculaPink
+import com.saswat10.posthive.ui.theme.DraculaYellow
 import com.saswat10.posthive.ui.theme.PostHiveTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,10 +51,76 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val navController = rememberNavController()
+            val items =
+                listOf(NavDestination.Discover, NavDestination.CreatePost, NavDestination.Profile)
+            var selectedIndex: Int by remember { mutableIntStateOf(0) }
             PostHiveTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        NavigationBar(
+                            containerColor = Color(
+                                ColorUtils.blendARGB(
+                                    MaterialTheme.colorScheme.background.toArgb(),
+                                    MaterialTheme.colorScheme.surface.toArgb(),
+                                    0.4f
+                                )
+                            )
+                        ) {
+                            items.forEachIndexed { index, screen ->
+                                NavigationBarItem(
+                                    icon = { Icon(screen.icon, null) },
+                                    label = { Text(screen.title) },
+                                    selected = index == selectedIndex,
+                                    onClick = {
+                                        selectedIndex = index
+                                        navController.navigate(screen.route) {
+                                            // Pop up to the start destination of the graph to
+                                            // avoid building up a large stack of destinations
+                                            // on the back stack as users select items
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            // Avoid multiple copies of the same destination when
+                                            // reselecting the same item
+                                            launchSingleTop = true
+                                            // Restore state when reselecting a previously selected item
+                                            restoreState = true
+                                        }
+
+                                    },
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        selectedIndicatorColor = MaterialTheme.colorScheme.surface,
+                                        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+                                        unselectedTextColor = MaterialTheme.colorScheme.onBackground,
+                                        disabledIconColor = DraculaYellow,
+                                        disabledTextColor = DraculaPink,
+                                    )
+                                )
+
+                            }
+                        }
+                    }
+                ) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        CreateUpdatePost()
+                        NavHost(
+                            navController = navController,
+                            startDestination = "discover_screen"
+                        ) {
+                            composable("discover_screen") {
+                                DiscoverScreen()
+//                                CreateUpdatePost()
+                            }
+                            composable(route = NavDestination.CreatePost.route) {
+                                CreateUpdatePost()
+                            }
+                            composable(route = NavDestination.Profile.route) {
+                                ProfileScreen()
+                            }
+                        }
                     }
                 }
             }
@@ -56,18 +128,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) {
+    object Discover : NavDestination("Discover", "discover_screen", Icons.Rounded.PlayArrow)
+    object CreatePost :
+        NavDestination("CreatePost", route = "create_screen", Icons.Rounded.AddCircle)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PostHiveTheme {
-        Greeting("Android")
-    }
+    object Profile : NavDestination("Profile", route = "profile", Icons.Rounded.AccountCircle)
 }

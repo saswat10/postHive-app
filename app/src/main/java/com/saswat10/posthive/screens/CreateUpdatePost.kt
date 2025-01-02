@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saswat10.posthive.components.Toolbar
@@ -30,7 +31,7 @@ import com.saswat10.posthive.viewmodels.CreatePostViewModel
 
 @Composable
 fun CreateUpdatePost(
-    viewModel: CreatePostViewModel = viewModel()
+    viewModel: CreatePostViewModel = hiltViewModel()
 ) {
 
     val title by viewModel.title.collectAsStateWithLifecycle()
