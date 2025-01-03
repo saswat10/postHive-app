@@ -1,8 +1,10 @@
 package com.saswat10.posthive.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Post
+import com.saswat10.posthive.di.DataStorage
 import com.saswat10.posthive.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +23,8 @@ sealed interface DiscoverViewState {
 
 @HiltViewModel
 class DiscoverViewModel @Inject constructor(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val dataStorage: DataStorage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DiscoverViewState>(DiscoverViewState.Loading)
@@ -38,5 +41,10 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-
+    fun getToken() {
+        viewModelScope.launch {
+            val x = dataStorage.getBearerToken()
+            Log.d("x", x ?: "")
+        }
+    }
 }

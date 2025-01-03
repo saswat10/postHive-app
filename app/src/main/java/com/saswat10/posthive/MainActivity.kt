@@ -36,7 +36,9 @@ import androidx.navigation.navArgument
 import com.saswat10.network.KtorClient
 import com.saswat10.posthive.screens.CreateUpdatePost
 import com.saswat10.posthive.screens.DiscoverScreen
+import com.saswat10.posthive.screens.LoginScreen
 import com.saswat10.posthive.screens.ProfileScreen
+import com.saswat10.posthive.screens.RegisterScreen
 import com.saswat10.posthive.screens.SinglePost
 import com.saswat10.posthive.ui.theme.DraculaPink
 import com.saswat10.posthive.ui.theme.DraculaYellow
@@ -126,15 +128,32 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(
                                 route = "post_detail/{postId}", arguments = listOf(
-                                    navArgument("postId"){
+                                    navArgument("postId") {
                                         type = NavType.IntType
                                     }
                                 )
                             ) { backStackEntry ->
                                 val postId: Int = backStackEntry.arguments?.getInt("postId")
                                     ?: -1
-                                SinglePost(navController = navController, postId = postId, onBackClicked = {
-                                    navController.navigateUp()
+                                SinglePost(
+                                    navController = navController,
+                                    postId = postId,
+                                    onBackClicked = {
+                                        navController.navigateUp()
+                                    })
+                            }
+                            composable(route = "login") {
+                                LoginScreen(navController = navController, onButtonClicked = {
+                                    navController.navigate(
+                                        "register"
+                                    )
+                                })
+                            }
+                            composable(route = "login") {
+                                RegisterScreen(navController = navController, onButtonClicked = {
+                                    navController.navigate(
+                                        "register"
+                                    )
                                 })
                             }
                         }

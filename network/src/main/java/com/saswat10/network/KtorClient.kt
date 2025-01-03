@@ -104,7 +104,11 @@ class KtorClient {
         }
     }
 
-    suspend fun updatePost(body: RemoteCreatePost, token: String, id: Int): ApiOperation<CreatePostReponse> {
+    suspend fun updatePost(
+        body: RemoteCreatePost,
+        token: String,
+        id: Int
+    ): ApiOperation<CreatePostReponse> {
         return safeApiCall {
             client.put("posts/$id") {
                 contentType(ContentType.Application.Json)
@@ -146,7 +150,11 @@ class KtorClient {
         }
     }
 
-    suspend fun updateComment(content: String, commentId: Int, token: String): ApiOperation<Comment> {
+    suspend fun updateComment(
+        content: String,
+        commentId: Int,
+        token: String
+    ): ApiOperation<Comment> {
         return safeApiCall {
             client.put("comments/$commentId") {
                 contentType(ContentType.Application.Json)
@@ -182,12 +190,12 @@ class KtorClient {
         return safeApiCall {
             client.post("/login") {
                 contentType(ContentType.Application.FormUrlEncoded)
-                setBody(
+                setBody(FormDataContent(
                     Parameters.build {
                         append("username", username)
                         append("password", password)
                     }
-                )
+                ))
             }.body<RemoteToken>()
         }
     }

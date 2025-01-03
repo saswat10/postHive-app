@@ -32,12 +32,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.saswat10.network.KtorClient
 
 
 @Composable
 fun RegisterScreen(
-    ktorClient: KtorClient
+    navController: NavHostController,
+    onButtonClicked: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }

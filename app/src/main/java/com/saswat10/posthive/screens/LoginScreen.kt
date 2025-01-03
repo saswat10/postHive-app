@@ -14,12 +14,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountBox
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,17 +34,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.saswat10.network.KtorClient
 import com.saswat10.posthive.components.LoadingIndicator
 import com.saswat10.posthive.components.Toolbar
+import com.saswat10.posthive.viewmodels.LoginViewModel
 
 
 @Composable
 fun LoginScreen(
-    ktorClient: KtorClient
+    viewModel: LoginViewModel = hiltViewModel(),
+    onButtonClicked:()->Unit,
+    navController: NavHostController
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,7 +69,7 @@ fun LoginScreen(
         )
         Spacer(Modifier.height(20.dp))
         OutlinedTextField(
-            value = email, onValueChange = { it -> email = it }, shape = RoundedCornerShape(25),
+            value = email, onValueChange = { viewModel.onEmailChange(it) },
             leadingIcon = {
                 Icon(
                     contentDescription = null,
@@ -72,13 +83,11 @@ fun LoginScreen(
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(25)),
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { it -> password = it },
-            shape = RoundedCornerShape(25),
+            value = password, onValueChange = { viewModel.onPasswordChange(it) },
             leadingIcon = {
                 Icon(
                     contentDescription = null,
-                    imageVector = Icons.Rounded.Lock,
+                    imageVector = Icons.Rounded.Email,
                     tint = MaterialTheme.colorScheme.primary
                 )
             },
@@ -93,12 +102,12 @@ fun LoginScreen(
         Text(
             "LOGIN",
             modifier = Modifier
-                .clickable {
+                .clickable { viewModel.login()
                 }
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(25))
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp))
                 .padding(16.dp)
-                .clip(RoundedCornerShape(25)),
+                .clip(RoundedCornerShape(5.dp)),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary
@@ -114,7 +123,7 @@ fun LoginScreen(
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { }
+                modifier = Modifier.clickable { onButtonClicked() }
             )
         }
     }
