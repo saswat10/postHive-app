@@ -1,5 +1,6 @@
 package com.saswat10.posthive.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import com.saswat10.network.models.domain.Post
 
 @Composable
-fun PostListComponent(post: Post) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+fun PostListComponent(post: Post, function: () -> Unit) {
+    Column(Modifier.fillMaxWidth().clickable { function() }, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         HorizontalDivider(Modifier.height(2.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),

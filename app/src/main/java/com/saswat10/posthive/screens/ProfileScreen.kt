@@ -27,11 +27,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.PostListComponent
 import com.saswat10.posthive.components.Toolbar
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    navController: NavHostController
+) {
     Column {
         Toolbar("Profile")
         Column {

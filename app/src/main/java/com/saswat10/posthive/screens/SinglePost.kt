@@ -23,39 +23,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.Comments
 import com.saswat10.posthive.components.LoadingIndicator
-import com.saswat10.posthive.components.PostCardComponent
 import com.saswat10.posthive.components.PostListComponent
 import com.saswat10.posthive.components.Toolbar
 import com.saswat10.posthive.viewmodels.CommentsState
-import com.saswat10.posthive.viewmodels.DiscoverViewState
 import com.saswat10.posthive.viewmodels.SinglePostViewModel
 import com.saswat10.posthive.viewmodels.SinglePostViewState
 
 @Composable
 fun SinglePost(
-    viewModel: SinglePostViewModel = hiltViewModel()
+    viewModel: SinglePostViewModel = hiltViewModel(),
+    navController: NavHostController,
+    postId: Int,
+    onBackClicked: () -> Unit
 ) {
     val postState by viewModel.postState.collectAsStateWithLifecycle()
     val commentsState by viewModel.commentState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getPostById(1)
+        viewModel.getPostById(postId)
     }
     LaunchedEffect(key1 = Unit) {
-        viewModel.getCommentsByPostId(1)
+        viewModel.getCommentsByPostId(postId)
     }
     Column {
-        Toolbar("", onBackAction = {})
+        Toolbar("", onBackAction = {onBackClicked()})
         when (val state = postState) {
             is SinglePostViewState.Loading -> LoadingIndicator()
             is SinglePostViewState.Error -> {
                 Text("Error Loading the content")
             }
 
-            is SinglePostViewState.Success -> PostListComponent(state.data)
+            is SinglePostViewState.Success -> PostListComponent(state.data) {}
         }
         HorizontalDivider()
         when (val state = commentsState) {

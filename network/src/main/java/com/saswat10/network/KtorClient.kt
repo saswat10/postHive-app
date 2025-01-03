@@ -13,6 +13,7 @@ import com.saswat10.network.models.remote.toPost
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -51,6 +52,16 @@ class KtorClient {
                 prettyPrint = true
                 isLenient = true
             })
+        }
+        install(HttpRequestRetry) {
+            maxRetries = 3 // Number of retry attempts
+            retryIf { request, response ->
+                // Retry if response status is in the 5xx range
+                response.status.value in 500..599
+            }
+            delayMillis { retry ->
+                retry * 1000L // Exponential backoff: 1s, 2s, 3s...
+            }
         }
 
 //        install(Auth){

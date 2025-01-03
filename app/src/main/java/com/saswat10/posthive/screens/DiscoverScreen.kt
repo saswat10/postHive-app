@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.LoadingIndicator
 import com.saswat10.posthive.components.PostListComponent
 import com.saswat10.posthive.components.Toolbar
@@ -18,7 +18,9 @@ import com.saswat10.posthive.viewmodels.DiscoverViewState
 
 @Composable
 fun DiscoverScreen(
-    viewModel: DiscoverViewModel = hiltViewModel()
+    viewModel: DiscoverViewModel = hiltViewModel(),
+    navController: NavHostController,
+    onClicked: (Int)-> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -38,7 +40,9 @@ fun DiscoverScreen(
                 LazyColumn {
                     state.data.forEach {
                         item {
-                            PostListComponent(it)
+                            PostListComponent(it){
+                                onClicked(it.id)
+                            }
                         }
                     }
                 }

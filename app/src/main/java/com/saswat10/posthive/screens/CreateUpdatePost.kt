@@ -26,12 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.Toolbar
 import com.saswat10.posthive.viewmodels.CreatePostViewModel
 
 @Composable
 fun CreateUpdatePost(
-    viewModel: CreatePostViewModel = hiltViewModel()
+    viewModel: CreatePostViewModel = hiltViewModel(),
+    navController: NavHostController,
 ) {
 
     val title by viewModel.title.collectAsStateWithLifecycle()

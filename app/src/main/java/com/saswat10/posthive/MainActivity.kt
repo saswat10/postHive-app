@@ -28,13 +28,16 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.saswat10.network.KtorClient
 import com.saswat10.posthive.screens.CreateUpdatePost
 import com.saswat10.posthive.screens.DiscoverScreen
 import com.saswat10.posthive.screens.ProfileScreen
+import com.saswat10.posthive.screens.SinglePost
 import com.saswat10.posthive.ui.theme.DraculaPink
 import com.saswat10.posthive.ui.theme.DraculaYellow
 import com.saswat10.posthive.ui.theme.PostHiveTheme
@@ -111,14 +114,28 @@ class MainActivity : ComponentActivity() {
                             startDestination = "discover_screen"
                         ) {
                             composable("discover_screen") {
-                                DiscoverScreen()
-//                                CreateUpdatePost()
+                                DiscoverScreen(navController = navController, onClicked = {
+                                    navController.navigate("post_detail/$it")
+                                })
                             }
                             composable(route = NavDestination.CreatePost.route) {
-                                CreateUpdatePost()
+                                CreateUpdatePost(navController = navController)
                             }
                             composable(route = NavDestination.Profile.route) {
-                                ProfileScreen()
+                                ProfileScreen(navController = navController)
+                            }
+                            composable(
+                                route = "post_detail/{postId}", arguments = listOf(
+                                    navArgument("postId"){
+                                        type = NavType.IntType
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                val postId: Int = backStackEntry.arguments?.getInt("postId")
+                                    ?: -1
+                                SinglePost(navController = navController, postId = postId, onBackClicked = {
+                                    navController.navigateUp()
+                                })
                             }
                         }
                     }
@@ -131,7 +148,7 @@ class MainActivity : ComponentActivity() {
 sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) {
     object Discover : NavDestination("Discover", "discover_screen", Icons.Rounded.PlayArrow)
     object CreatePost :
-        NavDestination("CreatePost", route = "create_screen", Icons.Rounded.AddCircle)
+        NavDestination("Create Post", route = "create_screen", Icons.Rounded.AddCircle)
 
     object Profile : NavDestination("Profile", route = "profile", Icons.Rounded.AccountCircle)
 }
