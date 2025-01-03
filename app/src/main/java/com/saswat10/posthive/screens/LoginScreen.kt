@@ -70,6 +70,7 @@ fun LoginScreen(
         Spacer(Modifier.height(20.dp))
         OutlinedTextField(
             value = email, onValueChange = { viewModel.onEmailChange(it) },
+            shape = RoundedCornerShape(25),
             leadingIcon = {
                 Icon(
                     contentDescription = null,
@@ -84,10 +85,11 @@ fun LoginScreen(
         )
         OutlinedTextField(
             value = password, onValueChange = { viewModel.onPasswordChange(it) },
+            shape = RoundedCornerShape(25),
             leadingIcon = {
                 Icon(
                     contentDescription = null,
-                    imageVector = Icons.Rounded.Email,
+                    imageVector = Icons.Rounded.Lock,
                     tint = MaterialTheme.colorScheme.primary
                 )
             },
@@ -105,7 +107,7 @@ fun LoginScreen(
                 .clickable { viewModel.login()
                 }
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp))
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(25))
                 .padding(16.dp)
                 .clip(RoundedCornerShape(5.dp)),
             textAlign = TextAlign.Center,

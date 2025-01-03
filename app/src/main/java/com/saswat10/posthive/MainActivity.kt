@@ -149,10 +149,10 @@ class MainActivity : ComponentActivity() {
                                     )
                                 })
                             }
-                            composable(route = "login") {
+                            composable(route = "register") {
                                 RegisterScreen(navController = navController, onButtonClicked = {
                                     navController.navigate(
-                                        "register"
+                                        "login"
                                     )
                                 })
                             }
@@ -167,7 +167,7 @@ class MainActivity : ComponentActivity() {
 sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) {
     object Discover : NavDestination("Discover", "discover_screen", Icons.Rounded.PlayArrow)
     object CreatePost :
-        NavDestination("Create Post", route = "create_screen", Icons.Rounded.AddCircle)
+        NavDestination("Create Post", route = "create_post", Icons.Rounded.AddCircle)
 
     object Profile : NavDestination("Profile", route = "profile", Icons.Rounded.AccountCircle)
 }

@@ -32,18 +32,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.saswat10.network.KtorClient
+import com.saswat10.posthive.viewmodels.RegisterViewModel
 
 
 @Composable
 fun RegisterScreen(
+    viewModel: RegisterViewModel = hiltViewModel(),
     navController: NavHostController,
     onButtonClicked: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val username by viewModel.username.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,7 +64,7 @@ fun RegisterScreen(
         Spacer(Modifier.height(20.dp))
         OutlinedTextField(
             value = username,
-            onValueChange = { it -> username = it },
+            onValueChange = { viewModel.onUsernameChange(it) },
             shape = RoundedCornerShape(25),
             leadingIcon = {
                 Icon(
@@ -75,7 +79,7 @@ fun RegisterScreen(
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(25)),
         )
         OutlinedTextField(
-            value = email, onValueChange = { it -> email = it }, shape = RoundedCornerShape(25),
+            value = email, onValueChange = { viewModel.onEmailChange(it) }, shape = RoundedCornerShape(25),
             leadingIcon = {
                 Icon(
                     contentDescription = null,
@@ -90,7 +94,7 @@ fun RegisterScreen(
         )
         OutlinedTextField(
             value = password,
-            onValueChange = { it -> password = it },
+            onValueChange = { viewModel.onPasswordChange(it) },
             shape = RoundedCornerShape(25),
             leadingIcon = {
                 Icon(
@@ -110,7 +114,7 @@ fun RegisterScreen(
         Text(
             "REGISTER",
             modifier = Modifier
-                .clickable {
+                .clickable { viewModel.register()
                 }
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(25))
@@ -131,7 +135,7 @@ fun RegisterScreen(
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { }
+                modifier = Modifier.clickable { onButtonClicked() }
             )
         }
     }
