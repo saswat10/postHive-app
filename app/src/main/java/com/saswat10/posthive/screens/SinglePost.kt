@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,30 +52,50 @@ fun SinglePost(
         viewModel.getCommentsByPostId(postId)
     }
     Column {
-        Toolbar("", onBackAction = {onBackClicked()})
-        when (val state = postState) {
-            is SinglePostViewState.Loading -> LoadingIndicator()
-            is SinglePostViewState.Error -> {
-                Text("Error Loading the content")
-            }
-
-            is SinglePostViewState.Success -> PostCardComponent(post = state.data, onDelete = {}, onEdit = {})
-        }
-        HorizontalDivider()
-        when (val state = commentsState) {
-            is CommentsState.Loading -> LoadingIndicator()
-            is CommentsState.Error -> {
-                Text("Error Loading the content")
-            }
-
-            is CommentsState.Success -> {
-                LazyColumn {
-                    state.data.forEach {
-                        item {
-                            Comments(it)
-                        }
+        Toolbar("", onBackAction = { onBackClicked() })
+        LazyColumn {
+            when (val state = postState) {
+                is SinglePostViewState.Loading -> item { LoadingIndicator() }
+                is SinglePostViewState.Error -> {
+                    item {
+                        Text("Error Loading the content")
                     }
                 }
+
+                is SinglePostViewState.Success -> item {
+                    PostCardComponent(
+                        post = state.data,
+                        onDelete = {},
+                        onEdit = {})
+                }
+            }
+            item {
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            when (val state = commentsState) {
+                is CommentsState.Loading -> item { LoadingIndicator() }
+                is CommentsState.Error -> {
+                    item {
+                        Text("Error Loading the content")
+                    }
+                }
+
+                is CommentsState.Success -> {
+
+                    state.data.forEach {
+                        item {
+                            Comments(it, onEdit = null, onDelete = null)
+                        }
+
+                    }
+                }
+            }
+
+            item {
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

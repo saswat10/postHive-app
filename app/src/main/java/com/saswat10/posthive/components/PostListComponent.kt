@@ -1,19 +1,29 @@
 package com.saswat10.posthive.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,70 +31,116 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saswat10.network.models.domain.Post
+import com.saswat10.posthive.R
+import com.saswat10.posthive.ui.theme.AlucardYellow
 
 @Composable
 fun PostListComponent(post: Post, function: () -> Unit) {
-    Column(Modifier.fillMaxWidth().clickable { function() }, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        HorizontalDivider(Modifier.height(2.dp))
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.AccountCircle,
-                contentDescription = null,
-                Modifier.padding(start = 4.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                "@${post.owner}",
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                post.createdAt,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(end = 4.dp),
-            )
-        }
-        HorizontalDivider()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+            .border(1.dp, MaterialTheme.colorScheme.surface)
+    ) {
+        // Voting Section
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+                .fillMaxHeight()
+                .width(40.dp)
+                .background(MaterialTheme.colorScheme.surface),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(post.title, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Icon(
+                imageVector = Icons.Rounded.PlayArrow,
+                contentDescription = null,
+                Modifier.rotate(-90F).size(25.dp),
+                tint = if (post.hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
+                )
             Text(
-                post.content,
-                fontSize = 18.sp
+                text = "${post.votes}",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color =  if (post.hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground
             )
         }
-        Row(
-            modifier = Modifier.padding(start = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+
+
+        // Post Content Section
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 12.dp, horizontal = 8.dp),
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Rounded.Favorite, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("${post.votes}")
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Menu, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("${post.comments}")
+            // Title
+            Text(
+                text = post.title,
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = if (post.content.length > 40) post.content.substring(
+                    0,
+                    40
+                ) + "..." else post.content,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Metadata
+            Row(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row {
+                    Text(
+                        text = "submitted ${post.createdAt} by ",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = AlucardYellow
+                    )
+                    Text(
+                        text = "@${post.owner}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable { }
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "${post.comments} comments",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
         }
-        HorizontalDivider(Modifier.height(2.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(40.dp)
+                .background(MaterialTheme.colorScheme.surface)
+                .clickable { function() },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "See Post",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(30.dp)
+            )
+        }
+
     }
 }
 
@@ -92,12 +148,12 @@ fun PostListComponent(post: Post, function: () -> Unit) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewComponent() {
-//    Column {
+    Column {
+        PostListComponent(post = Post(1, "", "", "", 1, 2, "", false, true), {})
+        PostListComponent(post = Post(1, "", "", "", 1, 2, "", false, false), {})
 //        PostListComponent()
 //        PostListComponent()
 //        PostListComponent()
 //        PostListComponent()
-//        PostListComponent()
-//        PostListComponent()
-//    }
+    }
 }
