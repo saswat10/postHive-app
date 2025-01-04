@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.Comments
 import com.saswat10.posthive.components.LoadingIndicator
+import com.saswat10.posthive.components.PostCardComponent
 import com.saswat10.posthive.components.PostListComponent
 import com.saswat10.posthive.components.Toolbar
 import com.saswat10.posthive.viewmodels.CommentsState
@@ -56,7 +57,7 @@ fun SinglePost(
                 Text("Error Loading the content")
             }
 
-            is SinglePostViewState.Success -> PostListComponent(state.data) {}
+            is SinglePostViewState.Success -> PostCardComponent(post = state.data, onDelete = {}, onEdit = {})
         }
         HorizontalDivider()
         when (val state = commentsState) {

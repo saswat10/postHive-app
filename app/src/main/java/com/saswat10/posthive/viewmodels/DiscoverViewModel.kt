@@ -7,6 +7,7 @@ import com.saswat10.network.models.domain.Post
 import com.saswat10.posthive.di.DataStorage
 import com.saswat10.posthive.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,7 +32,9 @@ class DiscoverViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun refreshAllPosts(forceRefresh: Boolean = false) = viewModelScope.launch {
-        if (forceRefresh) _uiState.update { DiscoverViewState.Loading }
+
+        _uiState.update { DiscoverViewState.Loading }
+        delay(2000)
         postRepository.fetchPosts().onSuccess { postList ->
             _uiState.update {
                 DiscoverViewState.Success(data = postList)
