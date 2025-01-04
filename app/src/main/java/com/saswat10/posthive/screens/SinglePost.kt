@@ -1,5 +1,6 @@
 package com.saswat10.posthive.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,9 @@ fun SinglePost(
     LaunchedEffect(key1 = Unit) {
         viewModel.getCommentsByPostId(postId)
     }
+
+    val isUpdateEnabled = viewModel.isUpdateEnabled.value
+
     Column {
         Toolbar("", onBackAction = { onBackClicked() })
         LazyColumn {
@@ -65,8 +69,16 @@ fun SinglePost(
                 is SinglePostViewState.Success -> item {
                     PostCardComponent(
                         post = state.data,
-                        onDelete = {},
-                        onEdit = {})
+                        onDelete = {if(isUpdateEnabled){
+                            viewModel.deletePost(postId)
+                            navController.navigateUp()
+                        } else null },
+                        onEdit = {
+                            if (isUpdateEnabled) {
+                                navController.navigate("update_screen/$postId")
+                            } else null
+                        },
+                    )
                 }
             }
             item {

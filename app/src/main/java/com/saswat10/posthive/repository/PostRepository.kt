@@ -24,4 +24,15 @@ class PostRepository @Inject constructor(
         body: RemoteCreatePost,
         token: String
     ): ApiOperation<CreatePostReponse> = ktorClient.createPost(body, token)
+
+    suspend fun updatePost(
+        body: RemoteCreatePost,
+        token: String,
+        id: Int
+    ): ApiOperation<CreatePostReponse> = ktorClient.updatePost(body, token, id)
+
+    suspend fun deletePost(
+        id: Int,
+        token: String
+    ) = ktorClient.deletePost(id, token)
 }

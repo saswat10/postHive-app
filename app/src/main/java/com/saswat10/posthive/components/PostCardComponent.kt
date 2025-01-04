@@ -47,7 +47,8 @@ import com.saswat10.posthive.ui.theme.DraculaPink
 fun PostCardComponent(
     onEdit: (() -> Unit)? = null,
     onDelete: (() -> Unit)? = null,
-    post: Post
+    post: Post,
+    showButton: Boolean = false
 ) {
     Column(Modifier.fillMaxWidth()) {
         Row(
@@ -151,6 +152,8 @@ fun PostCardComponent(
                             .size(20.dp),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
+                }else{
+                    Spacer(Modifier.height(1.dp))
                 }
                 if (onDelete != null) {
                     Icon(
@@ -161,6 +164,8 @@ fun PostCardComponent(
                             .size(20.dp),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
+                }else{
+                    Spacer(Modifier.height(1.dp))
                 }
             }
         }

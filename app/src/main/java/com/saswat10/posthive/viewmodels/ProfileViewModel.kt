@@ -1,5 +1,6 @@
 package com.saswat10.posthive.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.User
@@ -38,6 +39,8 @@ class ProfileViewModel @Inject constructor(
                                 data = user
                             )
                         }
+                        dataStorage.saveUserId(user.id.toString())
+                        Log.d("id", user.id.toString())
                     }.onFailure { exception ->
                         _uiState.update {
                             ProfileViewState.Error(

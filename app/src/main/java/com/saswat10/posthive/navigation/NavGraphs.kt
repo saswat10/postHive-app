@@ -13,6 +13,7 @@ import com.saswat10.posthive.screens.LoginScreen
 import com.saswat10.posthive.screens.ProfileScreen
 import com.saswat10.posthive.screens.RegisterScreen
 import com.saswat10.posthive.screens.SinglePost
+import com.saswat10.posthive.screens.UpdatePost
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(startDestination = "login", route = "auth") {
@@ -48,6 +49,15 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 })) { backStackEntry ->
             val postId: Int = backStackEntry.arguments?.getInt("postId") ?: -1
             SinglePost(navController = navController, postId = postId, onBackClicked = {
+                navController.navigateUp()
+            })
+        }
+        composable("update_screen/{postId}", arguments = listOf(
+            navArgument("postId"){
+                type = NavType.IntType
+            })) { backStackEntry ->
+            val postId: Int = backStackEntry.arguments?.getInt("postId") ?: -1
+            UpdatePost(navController = navController, postId = postId, onBackClicked = {
                 navController.navigateUp()
             })
         }

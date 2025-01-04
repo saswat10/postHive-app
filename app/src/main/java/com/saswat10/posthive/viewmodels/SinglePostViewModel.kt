@@ -1,5 +1,6 @@
 package com.saswat10.posthive.viewmodels
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Comment
@@ -38,13 +39,17 @@ class SinglePostViewModel @Inject constructor(
     private val _commentState = MutableStateFlow<CommentsState>(CommentsState.Loading)
     val commentState =_commentState.asStateFlow()
 
+    val isUpdateEnabled = mutableStateOf(false)
+
     fun getPostById(id: Int) = viewModelScope.launch {
         val token = dataStorage.getBearerToken()
+        val userId = dataStorage.getUserId()
         if (token != null) {
             postRepository.fetchPostById(id, token).onSuccess { post ->
                 _postState.update {
                     SinglePostViewState.Success(data = post)
                 }
+                isUpdateEnabled.value = post.ownerId == userId?.toInt()
             }.onFailure {
                 _postState.update { SinglePostViewState.Error }
             }
@@ -60,4 +65,15 @@ class SinglePostViewModel @Inject constructor(
             _commentState.update { CommentsState.Error }
         }
     }
+
+    fun deletePost(id: Int) = viewModelScope.launch {
+        val token = dataStorage.getBearerToken()
+        if (token != null) {
+            postRepository.deletePost(id, token)
+        }
+    }
+
+
+
+
 }

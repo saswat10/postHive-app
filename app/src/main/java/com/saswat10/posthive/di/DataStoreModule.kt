@@ -22,6 +22,7 @@ class DataStorage(private val context: Context) {
 
     private val bearerTokenKey = stringPreferencesKey("bearer_token")
     private val refreshTokenKey = stringPreferencesKey("refresh_token")
+    private val userIdKey = stringPreferencesKey("user_id")
 
     suspend fun saveBearerToken(bearerToken: String) {
         context.dataStore.edit { preferences ->
@@ -50,6 +51,24 @@ class DataStorage(private val context: Context) {
     suspend fun removeBearerToken() {
         context.dataStore.edit { preferences ->
             preferences.remove(bearerTokenKey)
+        }
+    }
+
+    suspend fun saveUserId(userId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[userIdKey] = userId
+        }
+    }
+
+    // Get User ID
+    suspend fun getUserId(): String? {
+        return context.dataStore.data.firstOrNull()?.get(userIdKey)
+    }
+
+    // Remove User ID
+    suspend fun removeUserId() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(userIdKey)
         }
     }
 }
