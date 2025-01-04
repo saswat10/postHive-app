@@ -8,5 +8,6 @@ data class Post (
     val votes: Int,
     val comments: Int,
     val createdAt: String,
-    val published: Boolean
+    val published: Boolean,
+    val hasVoted: Boolean
 )

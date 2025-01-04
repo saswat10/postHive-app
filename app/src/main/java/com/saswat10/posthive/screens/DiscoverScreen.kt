@@ -1,5 +1,6 @@
 package com.saswat10.posthive.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ fun DiscoverScreen(
                 LazyColumn {
                     state.data.forEach {
                         item {
+                            Log.d("posts", it.toString())
                             PostListComponent(it) {
                                 onClicked(it.id)
                             }

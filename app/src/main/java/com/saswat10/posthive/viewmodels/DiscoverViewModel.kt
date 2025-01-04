@@ -34,13 +34,15 @@ class DiscoverViewModel @Inject constructor(
     fun refreshAllPosts(forceRefresh: Boolean = false) = viewModelScope.launch {
 
         _uiState.update { DiscoverViewState.Loading }
-        delay(2000)
-        postRepository.fetchPosts().onSuccess { postList ->
-            _uiState.update {
-                DiscoverViewState.Success(data = postList)
+        val token = dataStorage.getBearerToken()
+        if (token != null) {
+            postRepository.fetchPosts(token).onSuccess { postList ->
+                _uiState.update {
+                    DiscoverViewState.Success(data = postList)
+                }
+            }.onFailure {
+                _uiState.update { DiscoverViewState.Error }
             }
-        }.onFailure {
-            _uiState.update { DiscoverViewState.Error }
         }
     }
 

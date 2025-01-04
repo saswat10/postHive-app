@@ -46,6 +46,12 @@ class DataStorage(private val context: Context) {
             .map { preferences -> preferences[refreshTokenKey] }
             .first()
     }
+
+    suspend fun removeBearerToken() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(bearerTokenKey)
+        }
+    }
 }
 
 @Module

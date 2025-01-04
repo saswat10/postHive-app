@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
+import com.saswat10.posthive.di.DataStorage
 import com.saswat10.posthive.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,8 @@ sealed interface CommentsState {
 
 @HiltViewModel
 class SinglePostViewModel @Inject constructor(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val dataStorage: DataStorage
 ) : ViewModel(){
 
     private val _postState = MutableStateFlow<SinglePostViewState>(SinglePostViewState.Loading)
@@ -37,12 +39,15 @@ class SinglePostViewModel @Inject constructor(
     val commentState =_commentState.asStateFlow()
 
     fun getPostById(id: Int) = viewModelScope.launch {
-        postRepository.fetchPostById(id).onSuccess { post ->
-            _postState.update {
-                SinglePostViewState.Success(data = post)
+        val token = dataStorage.getBearerToken()
+        if (token != null) {
+            postRepository.fetchPostById(id, token).onSuccess { post ->
+                _postState.update {
+                    SinglePostViewState.Success(data = post)
+                }
+            }.onFailure {
+                _postState.update { SinglePostViewState.Error }
             }
-        }.onFailure {
-            _postState.update { SinglePostViewState.Error }
         }
     }
 

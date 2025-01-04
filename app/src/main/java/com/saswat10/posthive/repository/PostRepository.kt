@@ -13,9 +13,9 @@ class PostRepository @Inject constructor(
     private val ktorClient: KtorClient,
     private val dataStorage: DataStorage
 ) {
-    suspend fun fetchPosts(): ApiOperation<List<Post>> = ktorClient.getPosts()
+    suspend fun fetchPosts(token: String): ApiOperation<List<Post>> = ktorClient.getPosts(token)
 
-    suspend fun fetchPostById(id: Int): ApiOperation<Post> = ktorClient.getPost(id)
+    suspend fun fetchPostById(id: Int, token: String): ApiOperation<Post> = ktorClient.getPost(id, token)
 
     suspend fun fetchComments(postId: Int): ApiOperation<List<Comment>> =
         ktorClient.getComments(postId)

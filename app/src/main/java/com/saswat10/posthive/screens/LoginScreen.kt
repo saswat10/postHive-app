@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -41,6 +42,7 @@ import androidx.navigation.NavHostController
 import com.saswat10.network.KtorClient
 import com.saswat10.posthive.components.LoadingIndicator
 import com.saswat10.posthive.components.Toolbar
+import com.saswat10.posthive.viewmodels.LoginState
 import com.saswat10.posthive.viewmodels.LoginViewModel
 
 
@@ -52,7 +54,15 @@ fun LoginScreen(
 ) {
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(uiState) {
+        if(uiState is LoginState.Success){
+            navController.navigate("main_app"){
+                popUpTo("login"){inclusive=true}
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -127,6 +137,14 @@ fun LoginScreen(
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable { onButtonClicked() }
             )
+        }
+
+        when(val state = uiState){
+            is LoginState.Error -> Text((uiState as LoginState.Error).message, color = Color.Red)
+            LoginState.Loading -> {
+                LoadingIndicator()
+            }
+            else -> {}
         }
     }
 }

@@ -27,13 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.saswat10.posthive.components.PostListComponent
 import com.saswat10.posthive.components.Toolbar
+import com.saswat10.posthive.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     Column {
         Toolbar("Profile")
@@ -54,6 +58,10 @@ fun ProfileScreen(
                         "Logout",
                         modifier = Modifier
                             .clickable {
+                                profileViewModel.logout()
+                                navController.navigate("auth"){
+                                    popUpTo("profile") { inclusive=true }
+                                }
                             }
                             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10))
                             .padding(8.dp)

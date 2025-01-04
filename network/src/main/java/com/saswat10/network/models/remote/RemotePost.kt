@@ -18,7 +18,9 @@ data class RemotePost(
     val ownerId: Int,
     val published: Boolean,
     val title: String,
-    val votes: Int
+    val votes: Int,
+    @SerialName("has_voted")
+    val hasVoted: Boolean
 ) {
     @Serializable
     data class Owner(
@@ -39,6 +41,7 @@ fun RemotePost.toPost(): Post {
         votes = votes,
         comments = comments,
         createdAt = convertToRelativeDate(createdAt),
-        published = published
+        published = published,
+        hasVoted = hasVoted
     )
 }

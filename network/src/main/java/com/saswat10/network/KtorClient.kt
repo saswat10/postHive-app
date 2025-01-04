@@ -76,9 +76,11 @@ class KtorClient {
     }
 
 
-    suspend fun getPosts(): ApiOperation<List<Post>> {
+    suspend fun getPosts(token: String): ApiOperation<List<Post>> {
         return safeApiCall {
-            client.get("posts/")
+            client.get("posts/"){
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }
                 .body<List<RemotePost>>()
                 .map {
                     it.toPost()
@@ -86,9 +88,11 @@ class KtorClient {
         }
     }
 
-    suspend fun getPost(id: Int): ApiOperation<Post> {
+    suspend fun getPost(id: Int, token: String): ApiOperation<Post> {
         return safeApiCall {
-            client.get("posts/$id")
+            client.get("posts/$id"){
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }
                 .body<RemotePost>()
                 .toPost()
         }
