@@ -18,8 +18,8 @@ fun convertToRelativeDate(utcDateTime: String): String {
     val daysDifference = ChronoUnit.DAYS.between(parsedDateTime, currentDateTime)
 
     return when {
-        daysDifference == 0L -> "Today"
-        daysDifference == 1L -> "Yesterday"
+        daysDifference == 0L -> "today"
+        daysDifference == 1L -> "yesterday"
         daysDifference > 1 -> "$daysDifference days ago"
         else -> "In the future" // For dates in the future
     }

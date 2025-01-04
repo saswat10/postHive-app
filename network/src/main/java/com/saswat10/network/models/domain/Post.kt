@@ -5,6 +5,7 @@ data class Post (
     val title: String,
     val content: String,
     val owner: String,
+    val ownerId: Int,
     val votes: Int,
     val comments: Int,
     val createdAt: String,

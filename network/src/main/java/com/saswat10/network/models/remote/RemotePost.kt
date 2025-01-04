@@ -42,6 +42,7 @@ fun RemotePost.toPost(): Post {
         comments = comments,
         createdAt = convertToRelativeDate(createdAt),
         published = published,
-        hasVoted = hasVoted
+        hasVoted = hasVoted,
+        ownerId = ownerId
     )
 }

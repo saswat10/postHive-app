@@ -149,11 +149,5 @@ fun PostListComponent(post: Post, function: () -> Unit) {
 @Composable
 fun PreviewComponent() {
     Column {
-        PostListComponent(post = Post(1, "", "", "", 1, 2, "", false, true), {})
-        PostListComponent(post = Post(1, "", "", "", 1, 2, "", false, false), {})
-//        PostListComponent()
-//        PostListComponent()
-//        PostListComponent()
-//        PostListComponent()
     }
 }

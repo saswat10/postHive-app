@@ -173,34 +173,6 @@ fun PostCardComponent(
 @Composable
 fun PreviewPost() {
     Column {
-        PostCardComponent(onEdit = {}, onDelete = {},
-            post = Post(
-                1,
-                "How to be a college  student",
-                "It sucks everyting here",
-                "",
-                1,
-                2,
-                "2 days ago",
-                false,
-                true
-            )
-        )
-        PostCardComponent(
-            onEdit = {},
-            onDelete = {},
-            post = Post(
-                2,
-                "How to be a good boy in 2 days",
-                "Never wanted actually to become good, because it has no advantages. Better be ruffian and do shitty things",
-                "krispyKrancky",
-                12,
-                2,
-                "14 days ago",
-                false,
-                true
-            )
-        )
 //        Row(
 //            modifier = Modifier
 //                .fillMaxWidth()

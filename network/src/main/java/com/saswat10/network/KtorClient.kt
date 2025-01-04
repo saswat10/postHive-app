@@ -2,6 +2,7 @@ package com.saswat10.network
 
 import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
+import com.saswat10.network.models.domain.User
 import com.saswat10.network.models.remote.CreatePostReponse
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
@@ -11,8 +12,10 @@ import com.saswat10.network.models.remote.RemotePost
 import com.saswat10.network.models.remote.RemoteRegistration
 import com.saswat10.network.models.remote.RemoteToken
 import com.saswat10.network.models.remote.RemoteUser
+import com.saswat10.network.models.remote.RemoteUserWithPosts
 import com.saswat10.network.models.remote.toComment
 import com.saswat10.network.models.remote.toPost
+import com.saswat10.network.models.remote.toUser
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -44,10 +47,10 @@ class KtorClient {
     private val client = HttpClient(OkHttp) {
         defaultRequest { url("https://posthive-api.onrender.com/") }
         install(HttpTimeout) {
-            requestTimeoutMillis = 30000 // Total timeout for the request (30 seconds)
-            connectTimeoutMillis = 10000 // Timeout for establishing a connection (10 seconds)
+            requestTimeoutMillis = 60000 // Total timeout for the request (60 seconds)
+            connectTimeoutMillis = 60000 // Timeout for establishing a connection (60 seconds)
             socketTimeoutMillis =
-                20000  // Timeout for data transfer after connection is established (20 seconds)
+                60000  // Timeout for data transfer after connection is established (60 seconds)
         }
         install(Logging) {
             logger = Logger.SIMPLE
@@ -78,7 +81,7 @@ class KtorClient {
 
     suspend fun getPosts(token: String): ApiOperation<List<Post>> {
         return safeApiCall {
-            client.get("posts/"){
+            client.get("posts/") {
                 header(HttpHeaders.Authorization, "Bearer $token")
             }
                 .body<List<RemotePost>>()
@@ -90,7 +93,7 @@ class KtorClient {
 
     suspend fun getPost(id: Int, token: String): ApiOperation<Post> {
         return safeApiCall {
-            client.get("posts/$id"){
+            client.get("posts/$id") {
                 header(HttpHeaders.Authorization, "Bearer $token")
             }
                 .body<RemotePost>()
@@ -201,6 +204,15 @@ class KtorClient {
                     }
                 ))
             }.body<RemoteToken>()
+        }
+    }
+
+    suspend fun getMe(token: String): ApiOperation<User> {
+        return safeApiCall {
+            client.get("users/user/me") {
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }.body<RemoteUserWithPosts>()
+                .toUser()
         }
     }
 
