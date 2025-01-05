@@ -1,5 +1,6 @@
 package com.saswat10.posthive.viewmodels
 
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,21 +32,50 @@ sealed interface CommentsState {
 class SinglePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val dataStorage: DataStorage
-) : ViewModel(){
+) : ViewModel() {
 
     private val _postState = MutableStateFlow<SinglePostViewState>(SinglePostViewState.Loading)
     val postState = _postState.asStateFlow()
 
     private val _commentState = MutableStateFlow<CommentsState>(CommentsState.Loading)
-    val commentState =_commentState.asStateFlow()
+    val commentState = _commentState.asStateFlow()
 
     val isUpdateEnabled = mutableStateOf(false)
+
+    val hasVoted = mutableStateOf<Boolean>(false)
+    val voteNumber = mutableIntStateOf(0)
+    val commentNumber = mutableIntStateOf(0)
+
+
+    fun toggleVote(id: Int) {
+        viewModelScope.launch {
+            val isCurrentlyVoted = hasVoted.value
+            val vote = voteNumber.value
+            val token = dataStorage.getBearerToken()
+
+            if (token != null) {
+                if (isCurrentlyVoted) {
+                    postRepository.toggleVote(id, token)
+                    hasVoted.value = false
+                    voteNumber.value = vote - 1
+                } else {
+                    postRepository.toggleVote(id, token)
+                    hasVoted.value = true
+                    voteNumber.value = vote + 1
+                }
+            }
+
+        }
+    }
 
     fun getPostById(id: Int) = viewModelScope.launch {
         val token = dataStorage.getBearerToken()
         val userId = dataStorage.getUserId()
         if (token != null) {
             postRepository.fetchPostById(id, token).onSuccess { post ->
+                hasVoted.value = post.hasVoted
+                voteNumber.value = post.votes
+                commentNumber.value = post.comments
                 _postState.update {
                     SinglePostViewState.Success(data = post)
                 }
@@ -72,8 +102,6 @@ class SinglePostViewModel @Inject constructor(
             postRepository.deletePost(id, token)
         }
     }
-
-
 
 
 }

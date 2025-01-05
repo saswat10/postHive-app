@@ -32,13 +32,14 @@ fun DiscoverScreen(
     onClicked: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val postVotes = viewModel.postVotes
 
     LaunchedEffect(key1 = Unit) {
         viewModel.refreshAllPosts(forceRefresh = true)
     }
 
     Column{
-        Toolbar("Discover")
+        Toolbar("All Posts")
         when (val state = uiState) {
             is DiscoverViewState.Loading -> LoadingIndicator(Modifier.weight(1f))
             is DiscoverViewState.Error -> {
@@ -56,9 +57,7 @@ fun DiscoverScreen(
                     state.data.forEach {
                         item {
                             Log.d("posts", it.toString())
-                            PostListComponent(it) {
-                                onClicked(it.id)
-                            }
+                            PostListComponent(it, function = {onClicked(it.id)}, hasVoted = postVotes[it.id]?.second?:false, toggle = {viewModel.toggleVote(it.id)}, votes = postVotes[it.id]?.first?:0)
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                     }

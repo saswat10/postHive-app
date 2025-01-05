@@ -91,14 +91,20 @@ class KtorClient {
         }
     }
 
+    private var postCache = mutableMapOf<Int, Post>()
     suspend fun getPost(id: Int, token: String): ApiOperation<Post> {
-        return safeApiCall {
-            client.get("posts/$id") {
-                header(HttpHeaders.Authorization, "Bearer $token")
-            }
-                .body<RemotePost>()
-                .toPost()
+        postCache[id]?.let {
+            return ApiOperation.Success(it)
         }
+
+        val post = client.get("posts/$id") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+        }
+            .body<RemotePost>()
+            .toPost()
+        postCache[id] = post
+        return safeApiCall { post }
+
     }
 
     suspend fun createPost(body: RemoteCreatePost, token: String): ApiOperation<CreatePostReponse> {
@@ -133,13 +139,20 @@ class KtorClient {
         }
     }
 
+    private var CommmentsCache = mutableMapOf<Int, List<Comment>>()
     suspend fun getComments(postId: Int): ApiOperation<List<Comment>> {
-        return safeApiCall {
-            client.get("posts/$postId/comments/")
+        CommmentsCache[postId]?.let {
+            return ApiOperation.Success(it)
+        }
+
+        val comments = client.get("posts/$postId/comments/")
                 .body<List<RemoteComment>>()
                 .map {
                     it.toComment()
                 }
+        CommmentsCache[postId] = comments
+        return safeApiCall {
+            comments
         }
     }
 
@@ -206,6 +219,7 @@ class KtorClient {
             }.body<RemoteToken>()
         }
     }
+
 
     suspend fun getMe(token: String): ApiOperation<User> {
         return safeApiCall {

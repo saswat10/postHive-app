@@ -35,4 +35,9 @@ class PostRepository @Inject constructor(
         id: Int,
         token: String
     ) = ktorClient.deletePost(id, token)
+
+    suspend fun toggleVote(
+        postId: Int,
+        token: String
+    ) = ktorClient.toggleVote(postId, token)
 }

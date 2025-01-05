@@ -44,7 +44,7 @@ import com.saswat10.posthive.R
 import com.saswat10.posthive.ui.theme.AlucardYellow
 
 @Composable
-fun PostListComponent(post: Post, function: () -> Unit) {
+fun PostListComponent(post: Post, function: () -> Unit, toggle:()-> Unit, hasVoted: Boolean, votes: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,14 +63,14 @@ fun PostListComponent(post: Post, function: () -> Unit) {
             Icon(
                 imageVector = Icons.Rounded.PlayArrow,
                 contentDescription = null,
-                Modifier.rotate(-90F).size(25.dp),
-                tint = if (post.hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
+                Modifier.rotate(-90F).size(25.dp).clickable { toggle() },
+                tint = if (hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
                 )
             Text(
-                text = "${post.votes}",
+                text = "$votes",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color =  if (post.hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground
+                color =  if (hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground
             )
         }
 

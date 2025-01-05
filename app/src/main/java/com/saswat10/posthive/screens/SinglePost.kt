@@ -45,6 +45,9 @@ fun SinglePost(
 ) {
     val postState by viewModel.postState.collectAsStateWithLifecycle()
     val commentsState by viewModel.commentState.collectAsStateWithLifecycle()
+    val voteNumber = viewModel.voteNumber.value
+    val commentNumber = viewModel.commentNumber.value
+    val hasVoted = viewModel.hasVoted.value
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getPostById(postId)
@@ -78,6 +81,10 @@ fun SinglePost(
                                 navController.navigate("update_screen/$postId")
                             } else null
                         },
+                        function = {viewModel.toggleVote(postId)},
+                        hasVoted = hasVoted,
+                        commentNumber = commentNumber,
+                        voteNumber = voteNumber
                     )
                 }
             }

@@ -48,6 +48,10 @@ fun PostCardComponent(
     onEdit: (() -> Unit)? = null,
     onDelete: (() -> Unit)? = null,
     post: Post,
+    function:()->Unit,
+    voteNumber:Int,
+    hasVoted: Boolean,
+    commentNumber: Int,
     showButton: Boolean = false
 ) {
     Column(Modifier.fillMaxWidth()) {
@@ -83,7 +87,7 @@ fun PostCardComponent(
             Column(
                 Modifier
                     .fillMaxHeight()
-                    .clickable {  }
+                    .clickable { function() }
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(16.dp)
 
@@ -95,7 +99,7 @@ fun PostCardComponent(
                         .rotate(-90F)
                         .size(25.dp)
                         ,
-                    tint = if (post.hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
+                    tint = if (hasVoted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
                 )
             }
 
@@ -127,13 +131,13 @@ fun PostCardComponent(
         ) {
             Row {
                 Text(
-                    "${post.votes} have upvoted",
+                    "$voteNumber upvotes",
                     color = AlucardYellow,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.width(16.dp))
                 Text(
-                    "${post.comments} Comments",
+                    "$commentNumber comments",
                     color = AlucardYellow,
                     fontWeight = FontWeight.Bold
                 )
