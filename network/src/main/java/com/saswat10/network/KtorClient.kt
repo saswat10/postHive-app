@@ -4,6 +4,7 @@ import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
 import com.saswat10.network.models.domain.User
 import com.saswat10.network.models.remote.CreatePostReponse
+import com.saswat10.network.models.remote.RCommentCreate
 import com.saswat10.network.models.remote.Registration
 import com.saswat10.network.models.remote.RegistrationResponse
 import com.saswat10.network.models.remote.RemoteComment
@@ -156,33 +157,25 @@ class KtorClient {
         }
     }
 
-    suspend fun createComment(content: String, postId: Int, token: String): ApiOperation<Comment> {
+    suspend fun createComment(content: RCommentCreate, postId: Int, token: String): ApiOperation<Comment> {
         return safeApiCall {
-            client.post("posts/$postId/comments") {
+            client.post("posts/$postId/comments/") {
                 contentType(ContentType.Application.Json)
-                setBody() {
-                    Parameters.build {
-                        append("content", content)
-                    }
-                }
+                setBody(content)
                 header(HttpHeaders.Authorization, "Bearer $token")
             }.body<RemoteComment>().toComment()
         }
     }
 
     suspend fun updateComment(
-        content: String,
+        content: RCommentCreate,
         commentId: Int,
         token: String
     ): ApiOperation<Comment> {
         return safeApiCall {
             client.put("comments/$commentId") {
                 contentType(ContentType.Application.Json)
-                setBody() {
-                    Parameters.build {
-                        append("content", content)
-                    }
-                }
+                setBody(content)
                 header(HttpHeaders.Authorization, "Bearer $token")
             }.body<RemoteComment>().toComment()
         }

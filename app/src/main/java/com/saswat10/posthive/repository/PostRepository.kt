@@ -5,6 +5,7 @@ import com.saswat10.network.KtorClient
 import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
 import com.saswat10.network.models.remote.CreatePostReponse
+import com.saswat10.network.models.remote.RCommentCreate
 import com.saswat10.network.models.remote.RemoteCreatePost
 import com.saswat10.posthive.di.DataStorage
 import javax.inject.Inject
@@ -40,4 +41,22 @@ class PostRepository @Inject constructor(
         postId: Int,
         token: String
     ) = ktorClient.toggleVote(postId, token)
+
+    suspend fun addComment(
+        postId: Int,
+        token: String,
+        content: RCommentCreate
+    ) = ktorClient.createComment(content, postId, token)
+
+    suspend fun updateComment(
+        commentId: Int,
+        token: String,
+        content: RCommentCreate
+    ) = ktorClient.updateComment(content, commentId, token)
+
+    suspend fun deleteComment(
+        commentId: Int,
+        token: String
+    ) = ktorClient.deleteComment(commentId, token)
+
 }

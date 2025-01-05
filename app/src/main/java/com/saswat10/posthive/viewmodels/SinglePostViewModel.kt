@@ -1,15 +1,18 @@
 package com.saswat10.posthive.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Comment
 import com.saswat10.network.models.domain.Post
+import com.saswat10.network.models.remote.RCommentCreate
 import com.saswat10.posthive.di.DataStorage
 import com.saswat10.posthive.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -45,6 +48,16 @@ class SinglePostViewModel @Inject constructor(
     val hasVoted = mutableStateOf<Boolean>(false)
     val voteNumber = mutableIntStateOf(0)
     val commentNumber = mutableIntStateOf(0)
+
+    private val _comment = MutableStateFlow("")
+    val comment: StateFlow<String> = _comment.asStateFlow()
+
+    fun onCommentChange(newTitle: String) {
+        _comment.value = newTitle
+    }
+
+    private val _comments = MutableStateFlow<List<Comment>>(emptyList())
+    val comments: StateFlow<List<Comment>> get() = _comments
 
 
     fun toggleVote(id: Int) {
@@ -91,6 +104,7 @@ class SinglePostViewModel @Inject constructor(
             _commentState.update {
                 CommentsState.Success(data = commentList)
             }
+            _comments.value = commentList
         }.onFailure {
             _commentState.update { CommentsState.Error }
         }
@@ -102,6 +116,24 @@ class SinglePostViewModel @Inject constructor(
             postRepository.deletePost(id, token)
         }
     }
+
+    fun addComment(postId: Int){
+        viewModelScope.launch {
+            val token = dataStorage.getBearerToken()
+            if (token != null) {
+                postRepository.addComment(postId = postId, content = RCommentCreate(comment.value), token = token).onSuccess {
+                    val updatedComments = _comments.value.toMutableList()
+                    updatedComments.add(it)
+                    _comments.value = updatedComments
+                    _comment.value = ""
+                }.onFailure {
+                    Log.d("Error", it.message.toString())
+                }
+            }
+        }
+    }
+
+
 
 
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,6 +35,7 @@ fun DiscoverScreen(
     val uiState by viewModel.uiState.collectAsState()
     val postVotes = viewModel.postVotes
 
+
     LaunchedEffect(key1 = Unit) {
         viewModel.refreshAllPosts(forceRefresh = true)
     }
@@ -53,7 +55,7 @@ fun DiscoverScreen(
             }
 
             is DiscoverViewState.Success -> {
-                LazyColumn {
+                LazyColumn() {
                     state.data.forEach {
                         item {
                             Log.d("posts", it.toString())
