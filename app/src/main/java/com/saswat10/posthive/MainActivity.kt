@@ -8,12 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.AddCircle
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -25,10 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.core.graphics.ColorUtils
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -62,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 listOf(NavDestination.Discover, NavDestination.CreatePost, NavDestination.Profile)
             var selectedIndex: Int by remember { mutableIntStateOf(0) }
 
+
             LaunchedEffect(Unit) {
                 val token = dataStorage.getBearerToken()
                 startDestination.value = if (token.isNullOrEmpty()) "auth" else "main_app"
@@ -79,17 +72,15 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         if (shouldShowBottomBar) {
                             NavigationBar(
-                                containerColor = Color(
-                                    ColorUtils.blendARGB(
-                                        MaterialTheme.colorScheme.background.toArgb(),
-                                        MaterialTheme.colorScheme.surface.toArgb(),
-                                        0.4f
-                                    )
-                                )
                             ) {
                                 items.forEachIndexed { index, screen ->
                                     NavigationBarItem(
-                                        icon = { Icon(screen.icon, null) },
+                                        icon = {
+                                            if (index == selectedIndex)
+                                                Icon(painterResource(screen.icon), null)
+                                            else
+                                                Icon(painterResource(screen.inactive), null)
+                                        },
                                         label = { Text(screen.title) },
                                         selected = index == selectedIndex,
                                         onClick = {
@@ -132,10 +123,31 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) {
-    object Discover : NavDestination("Discover", "discover_screen", Icons.Rounded.PlayArrow)
-    object CreatePost :
-        NavDestination("Create Post", route = "create_post", Icons.Rounded.AddCircle)
+sealed class NavDestination(
+    val title: String,
+    val route: String,
+    val icon: Int,
+    val inactive: Int
+) {
+    object Discover : NavDestination(
+        "Discover",
+        "discover_screen",
+        R.drawable.home_filled,
+        R.drawable.home_outline
+    )
 
-    object Profile : NavDestination("Profile", route = "profile", Icons.Rounded.AccountCircle)
+    object CreatePost :
+        NavDestination(
+            "Create Post",
+            route = "create_post",
+            R.drawable.add_24px,
+            R.drawable.add_24px
+        )
+
+    object Profile : NavDestination(
+        "Profile",
+        route = "profile",
+        inactive =R.drawable.person_24px,
+        icon = R.drawable.person_24_fill
+    )
 }

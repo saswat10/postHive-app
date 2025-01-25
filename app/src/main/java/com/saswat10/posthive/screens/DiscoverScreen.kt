@@ -42,7 +42,7 @@ fun DiscoverScreen(
     }
 
     Column{
-        Toolbar("All Posts")
+        Toolbar("Post Hive")
         when (val state = uiState) {
             is DiscoverViewState.Loading -> LoadingIndicator(Modifier.weight(1f))
             is DiscoverViewState.Error -> {

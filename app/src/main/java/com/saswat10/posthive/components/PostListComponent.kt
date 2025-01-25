@@ -1,41 +1,36 @@
 package com.saswat10.posthive.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.saswat10.network.models.domain.Post
 import com.saswat10.posthive.R
@@ -48,9 +43,12 @@ fun PostListComponent(
     hasVoted: Boolean,
     votes: Int
 ) {
-    ElevatedCard(modifier = Modifier
-        .fillMaxWidth(),
-        onClick = { function() }) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth(),
+        onClick = { function() },
+        colors = CardDefaults.outlinedCardColors(),
+    ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -71,7 +69,6 @@ fun PostListComponent(
                             text = post.owner,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             text = post.createdAt,
@@ -81,31 +78,62 @@ fun PostListComponent(
                         )
                     }
                 }
-                Icon(painter = painterResource(R.drawable.unbookmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.unbookmark),
+                    contentDescription = null,
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .clickable {}
+                        .background(
+                            shape = RoundedCornerShape(50),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                        .padding(6.dp)
+
+
+                )
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = post.title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.tertiary
+                modifier = Modifier.padding(4.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = post.content,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(4.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.padding(4.dp)
+            ) {
+                Icon(
+                    contentDescription = null,
+                    imageVector = Icons.Default.Favorite,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Text(
                     text = "${post.votes} Likes",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+
                 )
                 Spacer(modifier = Modifier.width(12.dp))
+                Icon(
+                    contentDescription = null,
+                    painter = painterResource(R.drawable.comments),
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Text(
                     text = "${post.comments} Comments",
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold
                 )
             }
