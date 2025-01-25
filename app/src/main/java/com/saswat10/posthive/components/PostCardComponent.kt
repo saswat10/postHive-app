@@ -1,7 +1,6 @@
 package com.saswat10.posthive.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,20 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.rounded.AccountBox
-import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,10 +31,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.saswat10.network.models.domain.Post
-import com.saswat10.posthive.ui.theme.AlucardYellow
-import com.saswat10.posthive.ui.theme.DraculaPink
 
 @Composable
 fun PostCardComponent(
@@ -132,13 +122,11 @@ fun PostCardComponent(
             Row {
                 Text(
                     "$voteNumber upvotes",
-                    color = AlucardYellow,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.width(16.dp))
                 Text(
                     "$commentNumber comments",
-                    color = AlucardYellow,
                     fontWeight = FontWeight.Bold
                 )
             }

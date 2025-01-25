@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -31,26 +30,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.saswat10.network.KtorClient
-import com.saswat10.posthive.components.LoadingIndicator
 import com.saswat10.posthive.di.DataStorage
 import com.saswat10.posthive.navigation.authNavGraph
 import com.saswat10.posthive.navigation.mainNavGraph
-import com.saswat10.posthive.screens.CreateUpdatePost
-import com.saswat10.posthive.screens.DiscoverScreen
-import com.saswat10.posthive.screens.LoginScreen
-import com.saswat10.posthive.screens.ProfileScreen
-import com.saswat10.posthive.screens.RegisterScreen
-import com.saswat10.posthive.screens.SinglePost
-import com.saswat10.posthive.ui.theme.DraculaPink
-import com.saswat10.posthive.ui.theme.DraculaYellow
 import com.saswat10.posthive.ui.theme.PostHiveTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -68,7 +54,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
             val navController = rememberNavController()
             val startDestination = remember { mutableStateOf("auth") }
             val currentBackStackEntry = navController.currentBackStackEntryAsState()
@@ -124,15 +109,6 @@ class MainActivity : ComponentActivity() {
                                             }
 
                                         },
-                                        colors = NavigationBarItemColors(
-                                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                                            selectedIndicatorColor = MaterialTheme.colorScheme.surface,
-                                            unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-                                            unselectedTextColor = MaterialTheme.colorScheme.onBackground,
-                                            disabledIconColor = DraculaYellow,
-                                            disabledTextColor = DraculaPink,
-                                        )
                                     )
 
                                 }
